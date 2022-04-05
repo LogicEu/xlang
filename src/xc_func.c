@@ -2,7 +2,7 @@
 #include <string.h>
 
 static xc_func_t* current_func = NULL;
-static xc_stack_t* functions = NULL;
+static ustack_t functions;
 static int func_is_open = 0;
 
 static xc_func_t xc_func_new(const char* typestr, const char* funcname)
@@ -18,10 +18,10 @@ static xc_func_t xc_func_new(const char* typestr, const char* funcname)
 
 xc_func_t* xc_search_func(const char* name)
 {
-    xc_func_t* func = functions->data;
-    for (unsigned int i = 0; i < functions->used; i++) {
+    xc_func_t* func = functions.data;
+    const size_t count = functions.size;
+    for (unsigned int i = 0; i < count; ++i, ++func) {
         if (!strcmp(func->name, name)) return func;
-        func++;
     }
     return NULL;
 }
@@ -79,14 +79,14 @@ void xc_func_close(const char* retvar)
         memcpy(current_func->ret.val, &n, current_func->ret.type);
     } else memcpy(current_func->ret.val, varptr->val, current_func->ret.type);*/
 
-    xc_stack_push(functions, current_func);
+    stack_push(&functions, current_func);
     func_is_open--;
 }
 
 void xc_func_stack_init()
 {
     current_func = malloc(sizeof(xc_func_t));
-    functions = xc_stack_new(16, sizeof(xc_func_t));
+    functions = stack_create(sizeof(xc_func_t));
 }
 
 int xc_func_is_open()

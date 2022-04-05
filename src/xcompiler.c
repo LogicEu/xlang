@@ -28,7 +28,7 @@ static char* xc_input_raw(const char* filein)
 
 static char* xc_preprocess(char* rawbuffer)
 {
-    return xc_string_trim(rawbuffer);
+    return x_strget_strip(rawbuffer);
 }
 
 int xc_compile(const char* filein, const char* fileout)

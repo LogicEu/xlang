@@ -92,19 +92,17 @@ static int xc_eval_first()
 
 static void xc_eval_line()
 {
-    tokens = xc_string_separate(strlines[current_line], &tokencount, ' ');
-    
+    tokens = x_strget_split(strlines[current_line], &tokencount, " ");
     xc_eval_first();
-    
-    xc_strings_free(tokens, tokencount);
+    x_strget_free(tokens, tokencount);
 }
 
 void xc_eval(char* buffer)
 {
-    strlines = xc_string_separate(buffer, &strlinecount, '\n');
+    strlines = x_strget_split(buffer, &strlinecount, "\n");
     for (size_t i = 0; i < strlinecount; i++) {
         current_line = i;
         xc_eval_line();
     }
-    xc_strings_free(strlines, strlinecount);
+    x_strget_free(strlines, strlinecount);
 }
